@@ -21,7 +21,7 @@ steps:
     displayName: cimgui Checkout
     workingDirectory: $(Pipeline.Workspace)
 
-  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release -D freetype_DIR=$(Pipeline.Workspace)/freetype/install
+  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release -D freetype_DIR=$(Pipeline.Workspace)/freetype/install/lib/cmake/freetype/
     displayName: cimgui CMake Setup
     workingDirectory: $(Pipeline.Workspace)/cimgui/
 
