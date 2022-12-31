@@ -10,6 +10,7 @@ jobs:
   pool:
     vmImage: windows-2022
   steps:
+    - checkout: none
     - template: azure/build.yml
     - template: azure/upload.yml
 
@@ -18,5 +19,6 @@ jobs:
   pool:
     vmImage: ubuntu-22.04
   steps:
+    - checkout: none
     - template: azure/build.yml
     - template: azure/upload.yml
