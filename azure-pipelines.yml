@@ -8,8 +8,6 @@ pool:
   vmImage: windows-2022
 
 steps:
-- checkout: none
-
 - script: git clone --depth 1 --branch VER-$(freetypeVersion) https://gitlab.freedesktop.org/freetype/freetype.git
   displayName: FreeType Checkout
 
@@ -24,3 +22,15 @@ steps:
 - script: cmake --build build --config Release --target install
   displayName: FreeType CMake Install
   workingDirectory: freetype/
+
+- checkout: self
+  displayName: cimgui Checkout
+  path: cimgui
+
+- script: cmake -B build
+  displayName: cimgui CMake Setup
+  workingDirectory: cimgui
+
+- script: cmake --build build --config Release
+  displayName: cimgui CMake Build
+  workingDirectory: cimgui
