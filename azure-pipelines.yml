@@ -29,8 +29,6 @@ steps:
 
 - script: cmake -B build
   displayName: cimgui CMake Setup
-  workingDirectory: cimgui
 
 - script: cmake --build build --config Release
   displayName: cimgui CMake Build
-  workingDirectory: cimgui
