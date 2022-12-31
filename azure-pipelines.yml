@@ -1,0 +1,14 @@
+trigger:
+- master
+
+variables:
+  freetypeVersion: '2-11-1'
+
+pool:
+  vmImage: windows-2022
+
+steps:
+- checkout: none
+
+- script: git clone --depth 1 --branch VER-$(freetypeVersion) https://gitlab.freedesktop.org/freetype/freetype.git
+  displayName: Clone FreeType
