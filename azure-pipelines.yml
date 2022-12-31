@@ -27,16 +27,17 @@ jobs:
     workingDirectory: $(Pipeline.Workspace)/freetype/
 
     #Now that we have FreeType ready to go, we can build cimgui with it
-  - checkout: self
+  - script: git clone --depth 1 --recursive $(Build.Repository.Uri) $(Pipeline.Workspace)/cimgui
     displayName: cimgui Checkout
-    path: cimgui
-    submodules: recursive
+    workingDirectory: $(Pipeline.Workspace)
 
   - script: cmake -B build -D CMAKE_BUILD_TYPE=Release
     displayName: cimgui CMake Setup
+    workingDirectory: $(Pipeline.Workspace)/cimgui/
 
   - script: cmake --build build --config Release
     displayName: cimgui CMake Build
+    workingDirectory: $(Pipeline.Workspace)/cimgui/
 
     #Upload Artifacts
   - task: PublishBuildArtifacts@1
@@ -49,4 +50,4 @@ jobs:
     displayName: Artifact FreeType
     inputs:
       pathToPublish: $(Pipeline.Workspace)/freetype/build/Release/
-      artifactName: cimgui-$(Agent.OS)-$(Agent.OSArchitecture)
+      artifactName: freetype-$(Agent.OS)-$(Agent.OSArchitecture)
