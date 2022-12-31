@@ -26,6 +26,7 @@ steps:
 - checkout: self
   displayName: cimgui Checkout
   path: cimgui
+  submodules: recursive
 
 - script: cmake -B build
   displayName: cimgui CMake Setup
