@@ -4,32 +4,48 @@ trigger:
 variables:
   freetypeVersion: '2-11-1'
 
-pool:
-  vmImage: windows-2022
+jobs:
+- job: Build
+  pool:
+    vmImage: windows-2022
+  steps:
+    #We first need to build and install FreeType
+  - script: git clone --depth 1 --branch VER-$(freetypeVersion) https://gitlab.freedesktop.org/freetype/freetype.git
+    displayName: FreeType Checkout
 
-steps:
-- script: git clone --depth 1 --branch VER-$(freetypeVersion) https://gitlab.freedesktop.org/freetype/freetype.git
-  displayName: FreeType Checkout
+  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=true -D FT_DISABLE_HARFBUZZ=TRUE -D FT_DISABLE_BROTLI=TRUE
+    displayName: FreeType CMake Setup
+    workingDirectory: freetype/
 
-- script: cmake -B build -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release -D FT_DISABLE_HARFBUZZ=TRUE -D FT_DISABLE_BROTLI=TRUE
-  displayName: FreeType CMake Setup
-  workingDirectory: freetype/
+  - script: cmake --build build --config Release
+    displayName: FreeType CMake Build
+    workingDirectory: freetype/
 
-- script: cmake --build build --config Release
-  displayName: FreeType CMake Build
-  workingDirectory: freetype/
+  - script: cmake --build build --config Release --target install
+    displayName: FreeType CMake Install
+    workingDirectory: freetype/
 
-- script: cmake --build build --config Release --target install
-  displayName: FreeType CMake Install
-  workingDirectory: freetype/
+    #Now that we have FreeType ready to go, we can build cimgui with it
+  - checkout: self
+    displayName: cimgui Checkout
+    path: cimgui
+    submodules: recursive
 
-- checkout: self
-  displayName: cimgui Checkout
-  path: cimgui
-  submodules: recursive
+  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release
+    displayName: cimgui CMake Setup
 
-- script: cmake -B build
-  displayName: cimgui CMake Setup
+  - script: cmake --build build --config Release
+    displayName: cimgui CMake Build
 
-- script: cmake --build build --config Release
-  displayName: cimgui CMake Build
+    #Upload Artifacts
+  - task: PublishBuildArtifacts@1
+    displayName: Artifact cimgui
+    inputs:
+      pathToPublish: $(Pipeline.Workspace)/cimgui/build/Release/
+      artifactName: cimgui-$(Agent.OS)-$(Agent.OSArchitecture)
+
+  - task: PublishBuildArtifacts@1
+    displayName: Artifact FreeType
+    inputs:
+      pathToPublish: $(Pipeline.Workspace)/freetype/build/Release/
+      artifactName: cimgui-$(Agent.OS)-$(Agent.OSArchitecture)
