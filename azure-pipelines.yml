@@ -11,4 +11,16 @@ steps:
 - checkout: none
 
 - script: git clone --depth 1 --branch VER-$(freetypeVersion) https://gitlab.freedesktop.org/freetype/freetype.git
-  displayName: Clone FreeType
+  displayName: FreeType Checkout
+
+- script: cmake -B build -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release -D FT_DISABLE_HARFBUZZ=TRUE -D FT_DISABLE_BROTLI=TRUE
+  displayName: FreeType CMake Setup
+  workingDirectory: freetype/
+
+- script: cmake --build build --config Release
+  displayName: FreeType CMake Build
+  workingDirectory: freetype/
+
+- script: cmake --build build --config Release --target install
+  displayName: FreeType CMake Install
+  workingDirectory: freetype/
