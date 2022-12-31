@@ -1,0 +1,12 @@
+steps:
+  - task: PublishBuildArtifacts@1
+    displayName: Artifact cimgui
+    inputs:
+      pathToPublish: $(Pipeline.Workspace)/cimgui/build/Release/
+      artifactName: cimgui-$(Agent.OS)-$(Agent.OSArchitecture)
+
+  - task: PublishBuildArtifacts@1
+    displayName: Artifact FreeType
+    inputs:
+      pathToPublish: $(Pipeline.Workspace)/freetype/build/Release/
+      artifactName: freetype-$(Agent.OS)-$(Agent.OSArchitecture)

@@ -5,49 +5,18 @@ variables:
   freetypeVersion: '2-11-1'
 
 jobs:
-- job: Build
+- job: BuildWindows
+  displayName: Build Windows
   pool:
     vmImage: windows-2022
   steps:
-    #We first need to build and install FreeType
-  - script: git clone --depth 1 --branch VER-$(freetypeVersion) https://gitlab.freedesktop.org/freetype/freetype.git $(Pipeline.Workspace)/freetype
-    displayName: FreeType Checkout
-    workingDirectory: $(Pipeline.Workspace)
+    - template: azure/build.yml
+    - template: azure/upload.yml
 
-  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=true -D FT_DISABLE_HARFBUZZ=TRUE -D FT_DISABLE_BROTLI=TRUE
-    displayName: FreeType CMake Setup
-    workingDirectory: $(Pipeline.Workspace)/freetype/
-
-  - script: cmake --build build --config Release
-    displayName: FreeType CMake Build
-    workingDirectory: $(Pipeline.Workspace)/freetype/
-
-  - script: cmake --build build --config Release --target install
-    displayName: FreeType CMake Install
-    workingDirectory: $(Pipeline.Workspace)/freetype/
-
-    #Now that we have FreeType ready to go, we can build cimgui with it
-  - script: git clone --depth 1 --recursive $(Build.Repository.Uri) $(Pipeline.Workspace)/cimgui
-    displayName: cimgui Checkout
-    workingDirectory: $(Pipeline.Workspace)
-
-  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release
-    displayName: cimgui CMake Setup
-    workingDirectory: $(Pipeline.Workspace)/cimgui/
-
-  - script: cmake --build build --config Release
-    displayName: cimgui CMake Build
-    workingDirectory: $(Pipeline.Workspace)/cimgui/
-
-    #Upload Artifacts
-  - task: PublishBuildArtifacts@1
-    displayName: Artifact cimgui
-    inputs:
-      pathToPublish: $(Pipeline.Workspace)/cimgui/build/Release/
-      artifactName: cimgui-$(Agent.OS)-$(Agent.OSArchitecture)
-
-  - task: PublishBuildArtifacts@1
-    displayName: Artifact FreeType
-    inputs:
-      pathToPublish: $(Pipeline.Workspace)/freetype/build/Release/
-      artifactName: freetype-$(Agent.OS)-$(Agent.OSArchitecture)
+- job: BuildLinux
+  displayName: Build Linux
+  pool:
+    vmImage: ubuntu-22.04
+    steps:
+      - template: azure/build.yml
+      - template: azure/upload.yml
