@@ -17,6 +17,6 @@ jobs:
   displayName: Build Linux
   pool:
     vmImage: ubuntu-22.04
-    steps:
-      - template: azure/build.yml
-      - template: azure/upload.yml
+  steps:
+    - template: azure/build.yml
+    - template: azure/upload.yml
