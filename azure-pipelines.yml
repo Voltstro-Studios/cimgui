@@ -2,7 +2,7 @@ trigger:
 - master
 
 variables:
-  freetypeVersion: '2-11-1'
+  freetypeVersion: '2-13-0'
 
 jobs:
 - job: BuildWindows
