@@ -28,3 +28,16 @@ steps:
   - script: cmake --build build --config Release
     displayName: cimgui CMake Build
     workingDirectory: $(Pipeline.Workspace)/cimgui/
+
+    #Build cimguizmo
+  - script: git clone --depth 1 --recursive "https://github.com/Voltstro-Studios/cimguizmo.git" $(Pipeline.Workspace)/cimguizmo
+    displayName: cimguizmo Checkout
+    workingDirectory: $(Pipeline.Workspace)
+
+  - script: cmake -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_LIBRARY_OUTPUT_DIRECTORY=Release -D IMGUIZMO_CIMGUI=$(Pipeline.Workspace)/cimgui/
+    displayName: cimguizmo CMake Setup
+    workingDirectory: $(Pipeline.Workspace)/cimguizmo/
+
+  - script: cmake --build build --config Release
+    displayName: cimguizmo CMake Build
+    workingDirectory: $(Pipeline.Workspace)/cimguizmo/

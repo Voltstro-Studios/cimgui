@@ -6,6 +6,12 @@ steps:
       artifactName: cimgui-$(Agent.OS)-$(Agent.OSArchitecture)
 
   - task: PublishBuildArtifacts@1
+    displayName: Artifact cimguizmo
+    inputs:
+      pathToPublish: $(Pipeline.Workspace)/cimguizmo/build/Release/
+      artifactName: cimguizmo-$(Agent.OS)-$(Agent.OSArchitecture)
+
+  - task: PublishBuildArtifacts@1
     displayName: Artifact FreeType
     inputs:
       pathToPublish: $(Pipeline.Workspace)/freetype/build/Release/
