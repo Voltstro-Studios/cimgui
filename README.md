@@ -1,5 +1,26 @@
-# cimgui [![Build Status](https://travis-ci.org/cimgui/cimgui.svg?branch=master)](https://travis-ci.org/cimgui/cimgui)
+# cimgui
 
+These build of cimgui have freetype enabled.
+
+## Building
+
+Create project files with cmake:
+
+```bash
+cmake -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_LIBRARY_OUTPUT_DIRECTORY=Release -D freetype_DIR="<freetype install location>"
+```
+
+And build:
+
+```
+cmake --build build --config Release
+```
+
+## Builds
+
+You can grab the built dynamic libraries off [from our Azure CI](https://dev.azure.com/Voltstro-Studios/cimgui-freetype/_build?definitionId=10&view=runs).
+
+---
 
 This is a thin c-api wrapper programmatically generated for the excellent C++ immediate mode gui [Dear ImGui](https://github.com/ocornut/imgui).
 All imgui.h functions are programmatically wrapped.
